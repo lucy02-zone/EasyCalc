@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
@@ -6,6 +6,23 @@ function App() {
   const [billAmount, setBillAmount] = useState("");
   const [results, setResults] = useState([]);
   const [costPerUnit, setCostPerUnit] = useState(null);
+
+  // 🌙 THEME STATE
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) setTheme(savedTheme);
+  }, []);
+
+  useEffect(() => {
+    document.body.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
 
   const addRoom = () => {
     setRooms([...rooms, { prev: "", pres: "" }]);
@@ -53,7 +70,11 @@ function App() {
     <div className="dashboard">
       <h1>⚡ Electricity Bill Dashboard</h1>
 
-      {/* ROOM INPUTS */}
+      {/* 🌙 TOGGLE BUTTON */}
+      <button className="theme-toggle" onClick={toggleTheme}>
+        {theme === "light" ? "🌙 Dark Mode" : "☀ Light Mode"}
+      </button>
+
       <div className="input-card">
         <h3>Room Meter Readings</h3>
 
@@ -80,21 +101,15 @@ function App() {
             />
 
             {rooms.length > 1 && (
-              <button
-                className="remove-btn"
-                onClick={() => removeRoom(index)}
-              >
+              <button className="remove-btn" onClick={() => removeRoom(index)}>
                 ❌
               </button>
             )}
           </div>
         ))}
 
-        <button className="add-btn" onClick={addRoom}>
-          ➕ Add Room
-        </button>
+        <button className="add-btn" onClick={addRoom}>➕ Add Room</button>
 
-        {/* TOTAL BILL INPUT */}
         <input
           className="bill-input"
           type="number"
@@ -108,7 +123,6 @@ function App() {
         </button>
       </div>
 
-      {/* RESULTS */}
       {results.length > 0 && (
         <>
           <div className="summary">
