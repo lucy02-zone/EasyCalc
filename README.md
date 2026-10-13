@@ -1,5 +1,7 @@
 
 
+To check out the project 
+easycalc-fcwd.onrender.com
 
 In the project directory, you can run:
 
